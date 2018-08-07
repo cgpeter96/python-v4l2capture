@@ -19,10 +19,14 @@ import v4l2capture
 import numpy as np
 import sys
 
+#需要输入两个参数
+'''
+example:python3 capture_picture.py 0 700 
+'''
 # Open the video device.
-num=sys.argv[1]
-val =int(sys.argv[2])
-video = v4l2capture.Video_device("/dev/video{}".format(num))
+num=sys.argv[1]  
+val =int(sys.argv[2]) #设置曝光值
+video = v4l2capture.Video_device("/dev/video{}".format(num)) 
 video.set_exposure_auto(1)
 video.set_exposure_absolute(val)
 # Suggest an image size to the device. The device may choose and
