@@ -13,21 +13,26 @@
 # purpose, without any conditions, unless such conditions are
 # required by law.
 
-import Image
+from PIL import Image
 import select
 import v4l2capture
+import numpy as np
+import sys
 
 # Open the video device.
-video = v4l2capture.Video_device("/dev/video0")
-
+num=sys.argv[1]
+val =int(sys.argv[2])
+video = v4l2capture.Video_device("/dev/video{}".format(num))
+video.set_exposure_auto(1)
+video.set_exposure_absolute(val)
 # Suggest an image size to the device. The device may choose and
 # return another size if it doesn't support the suggested one.
-size_x, size_y = video.set_format(1280, 1024)
+size_x, size_y = video.set_format(3364, 2448)
 
 # Create a buffer to store image data in. This must be done before
 # calling 'start' if v4l2capture is compiled with libv4l2. Otherwise
 # raises IOError.
-video.create_buffers(1)
+video.create_buffers(10)
 
 # Send the buffer to the device. Some devices require this to be done
 # before calling 'start'.
@@ -42,6 +47,16 @@ select.select((video,), (), ())
 # The rest is easy :-)
 image_data = video.read()
 video.close()
-image = Image.fromstring("RGB", (size_x, size_y), image_data)
+image = Image.frombytes("RGB", (size_x, size_y), image_data)
+
+
 image.save("image.jpg")
-print "Saved image.jpg (Size: " + str(size_x) + " x " + str(size_y) + ")"
+print ("Saved image.jpg (Size: " + str(size_x) + " x " + str(size_y) + ")")
+
+
+image_ary = np.asarray(image)
+
+import matplotlib.pyplot as plt
+plt.imshow(image_ary)
+plt.show()
+

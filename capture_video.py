@@ -13,7 +13,7 @@
 # purpose, without any conditions, unless such conditions are
 # required by law.
 
-import Image
+from PIL import Image
 import select
 import v4l2capture
 import time
@@ -48,4 +48,4 @@ with open('video.mjpg', 'wb') as f:
         f.write(image_data)
     
 video.close()
-print "Saved video.mjpg (Size: " + str(size_x) + " x " + str(size_y) + ")"
+print ("Saved video.mjpg (Size: " + str(size_x) + " x " + str(size_y) + ")")
